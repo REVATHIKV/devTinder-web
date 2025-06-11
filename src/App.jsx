@@ -1,17 +1,33 @@
-import { useState } from 'react'
-import Login from './components/Login'
- 
-import './App.css'
+import Login from "./components/Login";
+import Home from "./components/Home";
+import Signup from "./components/Signup";
+import Feed from "./components/Feed";
+import Profile from "./components/Profile";
+import store from "./utils/store";
+import { Provider } from "react-redux";
+import "./App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 
 function App() {
-  const [count, setCount] = useState(0)
+ 
 
   return (
     <>
-      <Login/>
-         
+      <Provider store={store}>
+        <BrowserRouter basename="/">
+          <Routes>
+            <Route path="/" element={<Home />}>
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/feed" element={<Feed />} />
+                 <Route path="/profile" element={<Profile />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </Provider>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
