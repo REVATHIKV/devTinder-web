@@ -5,6 +5,8 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { removeUser } from "../utils/userSlice";
+import { removeConnection } from "../utils/connectionSlice";
+import { removeFeed } from "../utils/feedSlice";
 
 const NavBar = () => {
   const user = useSelector((store) => store.user);
@@ -14,6 +16,8 @@ const NavBar = () => {
   const handleLogout = () => {
    axios.post(BASE_URL + "/logout",{}, { withCredentials: true }) ;
       dispatch(removeUser());
+       dispatch(removeFeed());
+        dispatch(removeConnection());
       return navigate("/login");
    
   };
@@ -25,7 +29,7 @@ const NavBar = () => {
     <div>
       <div className="navbar bg-base-100 shadow-sm">
         <div className="flex-1">
-          <Link to='/' className="btn btn-ghost text-xl">DevTinder</Link>
+          <Link to='/feed' className="btn btn-ghost text-xl">DevTinder</Link>
         </div>
         <div className="flex gap-2">
           <input
@@ -33,7 +37,7 @@ const NavBar = () => {
             placeholder="Search"
             className="input input-bordered w-24 md:w-auto"
           />
-          {user && (
+          {user && user.firstName && (
             <div className="dropdown dropdown-end">
               
               <p>Welcome {user.firstName }</p>
@@ -56,11 +60,14 @@ const NavBar = () => {
                 <li>
                   <Link  to="/profile">
                     Profile
-                    <span className="badge">New</span>
+                    {/* <span className="badge">New</span> */}
                   </Link>
                 </li>
                 <li>
-                  <a>Settings</a>
+                 <Link to='/connections'>Connections</Link>
+                </li>
+                   <li>
+                 <Link to='/requests'>Requests</Link>
                 </li>
                 <li>
                   <a onClick={handleLogout}>Logout</a>

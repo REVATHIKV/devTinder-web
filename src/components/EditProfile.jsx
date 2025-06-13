@@ -4,7 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
 import { addUser } from "../utils/userSlice";
- 
+
 import { useDispatch, useSelector } from "react-redux";
 import UserCards from "./UserCards";
 
@@ -18,6 +18,9 @@ const EditProfile = () => {
   const [photoUrl, setPhotoUrl] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [message, setMessage] = useState(false);
+  const [error, setError] = useState(false);
+
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -44,7 +47,6 @@ const EditProfile = () => {
     }
   }, [user]);
 
-  const [error, setError] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -60,24 +62,38 @@ const EditProfile = () => {
       setMessage(true);
       setTimeout(() => {
         setMessage(false);
-      },3000);
+      }, 3000);
 
       dispatch(addUser(res?.data?.data));
-    } catch (err) {}
+    } catch (err) {
+       setError(true);
+      setErrorMessage(err.response.data.message);
+      setTimeout(() => {
+        setError(false);
+      }, 3000);
+    }
   };
 
   return (
     <div className="flex justify-center  my-10">
-      <div className="toast toast-top toast-center">
-        {message && (
-          <div className="toast toast-top toast-center">
-            <div className="alert alert-success">
-              <span>{successMessage}</span>
-            </div>
+      {message && (
+        <div className="toast toast-top toast-center">
+          <div className="alert alert-success">
+            <span>{successMessage}</span>
           </div>
-        )}
-      </div>
-      <div className="card card-border bg-border-300 w-96">
+        </div>
+      )}
+
+      {error && (
+        <div className="toast toast-top toast-center">
+          <div className="alert alert-error">
+            <span>{errorMessage}</span>
+          </div>
+        </div>
+      )}
+
+      <div className="toast toast-top toast-center"></div>
+      <div className="card  border border-gray-200 w-96  rounded-xl p-4">
         <div className="card-body">
           <h2 className="card-title justify-center">Edit Profile</h2>
 
